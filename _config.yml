@@ -8,7 +8,7 @@
 
 # Basic Site Settings
 locale                   : "en-US"
-title                    : "Junru Ren 任俊儒"
+title                    : "Junru Ren"
 title_separator          : "-"
 name                     : &name "Junru Ren"
 description              : &description "Student at MIT"
@@ -54,9 +54,9 @@ author:
   goodreads        : # Username
   google_plus      : # Username
   keybase          : # Username
-  instagram        : # Username
+  instagram        : "junru.ren"
   lastfm           : # Username
-  linkedin         : https://www.linkedin.com/in/junruren/
+  linkedin         : "junruren"
   mastodon         : # URL
   medium           : # URL
   pinterest        : # Username
