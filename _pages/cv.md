@@ -11,13 +11,30 @@ redirect_from:
 
 Education
 ======
-* M.S. in Electrical Engineering and Computer Science, Massachusetts Institute of Technology, May 2026 (expected)
-* Master of Business Administration (MBA), MIT Sloan School of Management, May 2026 (expected)
-* B.S. in Computer Engineering, University of California San Diego, June 2014
+
+## Massachusetts Institute of Technology
+* M.S. in Electrical Engineering and Computer Science, _May 2026 (expected)_
+* Master of Business Administration (MBA), _May 2026 (expected)_
+
+## University of California San Diego
+* B.S. in Computer Engineering, _June 2014_
 
 Work experience
 ======
-* TODO, see https://www.linkedin.com/in/junruren/details/experience/
+
+## [SoundHound AI](soundhound.com)
+* Senior Software Engineer / Tech Lead, _2023 - 2024_
+* Software Engineer II / Tech Lead, _2020 - 2023_
+* Software Engineer I, _2018 - 2020_
+
+## [Yelp](yelp.com)
+* Software Engineering Intern, _2017_
+
+## University of California San Diego
+* Computer Science and Engineering Tutor, _2016-2018_
+  * [CSE 11 Intro to CS & Object-oriented Programming: Java](https://cseweb.ucsd.edu/~ricko/CSE11/)
+  * [CSE 12 Basic Data Structures and Object-Oriented Design](https://cseweb.ucsd.edu/~malanglois/)
+  * [CSE 30 Computer Organization and Systems Programming](https://cseweb.ucsd.edu/~ricko/CSE30/)
 
 <!---
 
