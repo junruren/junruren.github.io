@@ -23,11 +23,11 @@ author:
   # Biographic information
   avatar           : "profile.jpg"
   name             : "Junru Ren 任俊儒"
-  bio              : "MIT EECS M.S. and MBA Candidate, MIT LGO '26 | Ex-SoundHound AI"
+  bio              : "MIT EECS M.S. and MBA Candidate, MIT LGO '26"
   location         : "Cambridge, MA"
-  employer         : "Massachusetts Institute of Technology"
+  employer         : "MIT"
   uri              : # URL
-  email            : "junruren@mit.edu" 
+  email            : "junruren@mit.edu"
 
   # Academic websites
   arxiv            : # URL - Update with the correct link to your profile
