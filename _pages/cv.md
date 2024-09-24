@@ -20,12 +20,12 @@ redirect_from:
 
 ## Work experience
 
-### [SoundHound AI](soundhound.com)
+### [SoundHound AI](https://soundhound.com)
 * Senior Software Engineer / Tech Lead, _2023 - 2024_
 * Software Engineer II / Tech Lead, _2020 - 2023_
 * Software Engineer I, _2018 - 2020_
 
-### [Yelp](yelp.com)
+### [Yelp](https://yelp.com)
 * Software Engineering Intern, _2017_
 
 ### University of California San Diego
