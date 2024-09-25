@@ -1,6 +1,6 @@
 ---
 permalink: /
-title: "Junru Ren"
+title: "👋 Hello!"
 excerpt: "About me"
 author_profile: true
 redirect_from: 
@@ -8,9 +8,7 @@ redirect_from:
   - /about.html
 ---
 
-👋 Hi there!
-
-I am passionate about innovating at the intersection of technology, humanity, and business. I aspire to contribute to the advancement of autonomous vehicles as a means of democratizing mobility for everyone.
+I am passionate about innovating at the **intersection of technology, humanity, and business**. I aspire to contribute to the advancement of **autonomous vehicles** as a means of democratizing mobility for everyone.
 
 I returned to campus and became a graduate student at MIT in the summer of 2024. Here at MIT, I am pursuing dual degrees—a Master of Science (M.S.) in Electrical Engineering and Computer Science (EECS) at the [MIT School of Engineering](https://engineering.mit.edu/) and an M.B.A. at the [MIT Sloan School of Management](https://mitsloan.mit.edu/). This unique dual-degree experience is made possible through the pioneering [MIT Leaders for Global Operations (LGO) program](https://lgo.mit.edu/).
 
