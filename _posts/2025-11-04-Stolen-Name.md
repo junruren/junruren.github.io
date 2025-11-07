@@ -7,38 +7,74 @@ tags:
   - culture
 ---
 
-What happens when you are greeted with just half of your first name by a software system? Or maybe an online tax form or driver's license portal does not recognize your name even when you thought you typed it correctly? From the lens of Chinese names, this post reflects how software systems can inadvertently erase identity through poor handling of names based on biased assumptions.
+Names are one of the first things a system asks for, and one of the easiest ways it reveals what culture it was built for. This post looks at how seemingly harmless assumptions in software can quietly erase identity, using Chinese names as the primary case study.
 
 ---
 
-In my junior years as a software engineer responsible for designing different APIs that relay user information to support voice AI interactions, my mentor, [David](https://www.ellipsix.net/index.html), shared with me a funny blog post: [_"Falsehoods Programmers Believe About Names"_](https://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/). This is probably a classic piece that many seasoned geeks have read, but it was humorously eye-opening for me at that time. You gotta read it if you haven't yet! My favorite is the last one:
+In my junior years as a software engineer designing APIs to relay user information for voice AI, my mentor, [David](https://www.ellipsix.net/index.html), shared with me a funny blog post: [_"Falsehoods Programmers Believe About Names"_](https://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/). This is probably a classic piece that many geeks have read, but it was humorously eye-opening for me at that time. You gotta read it if you haven't yet! My favorite is the last one:
 
 > _40. People have names._
 
-Joking aside, I recently remembered a series of encounters I had with other Chinese friends regarding their names being misrepresented or truncated by various software systems. And the more I thought about it, the more I realized how these seemingly small issues can have a significant impact on one's sense of identity and belonging.
+We often model "name" as a tidy schema, then watch reality break it.
 
-## Chinese Names in Chinese
+As someone who has built user‑facing systems, I can’t help noticing how the design of something as small as a name field encodes an entire worldview. The details, white spaces, commas, capitalization, become cultural choices with real human consequences.
 
-This is already a rabbit hole on its own because when we say "Chinese," we are actually referring to a vast array of cultures, ethnicities, languages, and naming conventions across Greater China and beyond. I am a [Han Chinese](https://en.wikipedia.org/wiki/Han_Chinese) from mainland China, so I will focus on the naming conventions that are most common among Han Chinese people.
+## The Issue: When Given Names Have Spaces
 
-A Chinese name typically consists of a family name (surname) followed by a given name. However, across most of the local-use official documents or ID cards, the full name is presented as a single string of characters without any segmentation into "first name" and "last name." Growing up, every form I had to filled out simply had one field asking for full name, all characters together.
+Take my own given name: **Junru**.
+
+On my passport, my name romanized as "Ren, Junru." That works fine in most Western systems: two tokens, mapped cleanly to given and family names. When a service greets me, I usually see "Hi Junru!" No drama.
+
+In reality, my given name is formed by two characters, Jun and Ru, as is common for many Han Chinese names. Mainland documents romanize those two characters as one word ("Junru"). Outside mainland China, though, it is common to romanize with a space: **"Jun Ru."**
+
+Here's where the breakage starts. Many systems assume a first‑space split:
+
+And this is where the trouble begins. Many software systems, especially communication platforms, tend to misinterpret the space as a separator between first name and middle name. As a result, one would be greated as "Hi Jun!" instead of "Hi Jun Ru!" And when others are looking up this name in a directory, they might see "Jun Ren" — effectively losing half of the given name.
+
+```py
+first_name = full_name.split(" ")[0]
+last_name  = full_name.split(" ")[-1]
+```
+
+Neat. Deterministic. And, for "Jun Ru Ren," it yields `first_name = "Jun"` and `last_name = "Ren"`, silently truncating half of my given name. The UI then tries to be friendly: "Hi Jun!" The directory shows "Jun Ren." A small bug becomes a small erasure.
+
+This happens to friends who grew up in North America with given names romanized as two words. The downstream effects are social as much as technical: some eventually go by the truncated first token; others adopt an English name to avoid constant friction. Technology didn’t force the choice, but it nudged it.
+
+## Beyond Chinese Names: A Global Pattern
+
+The point isn’t that Chinese names are uniquely tricky; it’s that a single schema can’t represent the world:
+
+* Some Indonesians and Burmese people have mononyms: no family name at all.
+* Icelandic names are primarily patronymic/matronymic, not stable family surnames.
+  * Perfect opportunity to cite my recent favorite Icelandic-Chinese Jazz super start, [Laufey](https://en.wikipedia.org/wiki/Laufey_(singer)): her full name is **Laufey Lín Bing Jónsdóttir** where Jónsdóttir = Jón + s + dóttir, meaning "daughter of Jón." Her Chinese name 林冰 (Lín Bīng) is also proundly included, where Lín is her mother's family name. Interestingly, her twin sister Júnía Lín Hua Jónsdóttir nowadays goes by "Júnía Lin" in a lot of the production credits.
+* Many Spanish-speaking cultures use two family names (paternal and maternal).
+* In parts of India, name order and presence of a family name vary widely by region and language.
+
+Yet many forms still require "First Name" and "Last Name," full stop.
+
+A helpful resource for developers trying to do better is the W3C write-up, [Personal Names Around the World](https://www.w3.org/International/questions/qa-personal-names). The short version: accept variability, avoid premature parsing, and don’t assume structure from whitespace.
+
+## Appendix: How Chinese IDs Treat Names (Chinese Script)
+
+When names are written in Chinese characters, the segmentation problem mostly disappears. Across most local ID systems, the full name appears as a single string of characters without explicit "first/last" fields.
 
 | Sample | Remark |
 |-----------------------|-------------------|
-| ![](https://upload.wikimedia.org/wikipedia/commons/e/e7/The_People%27s_Republic_of_China_resident_identity_card_%28SAMPLE%29.png) | In **Mainland China**, a Resident ID Card only has one "full name" (姓名) field with all Chinese characters together. In the sample photo, look for "某某某" as the placeholder of a full name. There are, however, exceptions for a name of a certain ethnic minority where the idea of a "full name" is very different, and the mapping can be not as straightforward... (An interesting read: [Additional Features in Ethnic Minority Areas on a Chinese ID Card](https://en.wikipedia.org/wiki/Resident_Identity_Card#Additional_features_in_ethnic_minority_areas)) |
-| ![](https://upload.wikimedia.org/wikipedia/commons/f/f6/ROC_mibunsho.jpg) | An ID card in **Taiwan (ROC)** also only has one "full name" (姓名) field with all characters together, though the spacing between two characters seem significant but I don't think the spacing demarcates the surname name and given name |
-| ![](https://upload.wikimedia.org/wikipedia/commons/4/47/Hong_Kong_ID_card_front_side.png) | The Chinese portion of an ID card in **Hong Kong** also only has all Chinese characters together. However, the English portion of the ID card puts a comma between the family name and given name. |
-| ![](https://upload.wikimedia.org/wikipedia/commons/b/bf/MacaoID2023.jpg) | **Macau** is the _only_ instance that I can find where the ID card's design explicitly separates the family name and given name fields. |
+| ![](https://upload.wikimedia.org/wikipedia/commons/e/e7/The_People%27s_Republic_of_China_resident_identity_card_%28SAMPLE%29.png) | **Mainland China** Resident ID Card shows one "full name" (姓名) field with characters together. In the sample photo, look for "某某某" as the placeholder of a full name. Some ethnic minority formats differ; see [Additional Features](https://en.wikipedia.org/wiki/Resident_Identity_Card#Additional_features_in_ethnic_minority_areas) |
+| ![](https://upload.wikimedia.org/wikipedia/commons/f/f6/ROC_mibunsho.jpg) | **Taiwan (ROC)** ID likewise shows one name field (姓名). Spacing between characters is typographic, not a given/family separator. |
+| ![](https://upload.wikimedia.org/wikipedia/commons/4/47/Hong_Kong_ID_card_front_side.png) | **Hong Kong**: the Chinese line shows characters together; the English line separates with a comma between family and given names. |
+| ![](https://upload.wikimedia.org/wikipedia/commons/b/bf/MacaoID2023.jpg) | **Macau** is a notable case where the card's design explicitly separates family and given name fields. |
 
-With the examples above (alas I guess except Macau), it is clear that Chinese names in Chinese are typically treated as a single unit without segmentation.
-
-## Chinese Names in Romanization
-
-
----
+These examples (Macau aside) illustrate a key idea: in the native script, names are treated as a single unit; the friction arises during romanization and in systems that overfit to Western schemas.
 
 ## Flip the Table
 
-So far, we have explored how a Chinese name identity, being taken into a non-Chinese cultural context where local software systems designed with local conventions, may be unintentionally distorted or erased.
+We've looked at what happens when Chinese names meet systems designed around Anglo‑American conventions. Now imagine the reverse: a non‑Chinese name forced into a Chinese schema with no space‑based segmentation, or an interface that insists on family‑name‑first without a clear family name to give. It could go both ways.
 
-But we can certainly flip the table and ask: _What if a non-Chinese name is being forced into a Chinese naming convention?_ If you have a say in this matter, I'd love to hear from you!
+If you have stories, what worked, what broke, I'd love to learn from them.
+
+---
+
+## Closing Thoughts
+
+Whether in code or culture, the smallest design decisions shape how people see themselves. A name is not just data to be parsed; it's a story, often written across languages and generations. When we build software, we are choosing which stories appear whole. Next time you see a field labeled First Name, pause and ask: whose first name?
