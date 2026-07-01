@@ -12,10 +12,10 @@ redirect_from:
 ## Education
 
 ### Massachusetts Institute of Technology
-* **M.S. in Electrical Engineering and Computer Science**, _May 2026 (expected)_
-* **Master of Business Administration (MBA)**, _May 2026 (expected)_
-* Leaders for Global Operations (LGO) Fellow, $100K fellowship awarded
-* **Thesis Research**: Multi-Agent Procurement Negotiation (ongoing in partnership with Nike)
+* **S.M. in Electrical Engineering and Computer Science**, _May 2026_
+* **Master of Business Administration (MBA)**, _May 2026_
+* Leaders for Global Operations (LGO), Class of 2026, $100K fellowship awarded
+* **Thesis Research**: Multi-Agent Procurement Negotiation, in partnership with Nike
 * **Relevant Coursework**: Deep Learning, Advances in Computer Vision, Intelligent Multimodal UI, Law of AI & Big Data
 * **Projects**:
   * *MIT EECS Chrome Extension*: annotates MIT EECS subject listings with eligibility in-page, reducing tab-switching friction and simplifying course planning for students ([install here](https://chromewebstore.google.com/detail/nfoffleelcgbabibmmbjmicefmanmeeo))
@@ -72,8 +72,8 @@ redirect_from:
 ## Skills
 
 * **Languages**: Python, C++, C, Java, R, Bash, Mandarin Chinese, Japanese (elementary)
-* **Technical**: PyTorch, Software Architecture, API Design, Git, Agentic AI, Simulation Systems
-* **General**: Product Strategy, Leading & Mentoring, Public Speaking
+* **Technical**: PyTorch, Agentic AI, Multi-Agent Systems, Simulation Systems, Machine Vision, Software Architecture, API Design, Git
+* **Product & Leadership**: Product Strategy, Requirements Definition, Roadmapping, User Research, Leading & Mentoring, Public Speaking
 
 ---
 
