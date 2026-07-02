@@ -16,10 +16,15 @@ Let's set up the MIT thesis LaTeX template locally!
 
 MIT's libraries require theses to be deposited electronically using a strict format. To simplify formatting, the [**MIT thesis LaTeX template**](https://web.mit.edu/thesis/tex/) provides a class (`mitthesis.cls`) and a set of sample files that implement these requirements.
 
+Many thanks to Prof. John H. Lienhard for maintaining `mitthesis` and for generously answering questions from students like me.
+
+Update July 2026: this post now targets [`mitthesis` v1.23](https://ctan.org/ctan-ann/id/6f695840beec20a6%40hogwart?lang=en), dated June 5, 2026. If you used an earlier version of this post, some screenshots or comments you remember came from the v1.20-v1.22 transition period, when class-file location, committee-page behavior, and LGO cover-page workarounds were still moving.
+{: .notice}
+
 This tutorial blog builds on top of my previous ["Tutorial: Use LaTeX Locally with VS Code"]({% post_url 2025-06-29-Tutorial-LaTeX-VSCode %}). By following that tutorial, you should already have:
 
 * **Visual Studio Code with LaTeX Workshop installed.** The extension provides core LaTeX features such as auto‑building to PDF, an integrated PDF viewer, SyncTeX navigation, IntelliSense, and log parsing. It automatically runs the sequence of tools needed to build your document and highlights errors in the editor.
-* **TeX Live 2022 or newer.** The MIT thesis class requires a recent LaTeX distribution; as of the [CTAN v1.22 release](https://ctan.org/ctan-ann/id/aYBqHvP6SlO4x7oL%40prptp) dated January 31, 2026, formats before June 2022 are no longer supported. A full TeX Live installation includes `pdflatex`, biber and other programs needed by the template.
+* **TeX Live 2022 or newer.** The MIT thesis class requires a recent LaTeX distribution; [CTAN lists v1.23](https://ctan.org/pkg/mitthesis) as requiring TeX Live 2022 or later. A full TeX Live installation includes `lualatex`, `pdflatex`, biber and other programs needed by the template. I recommend LuaLaTeX for the current template, especially if you care about modern PDF metadata or accessibility workflows.
 * **Biber for bibliography management.** The template defaults to using biblatex with the biber backend. Biber is part of TeX Live and will run automatically if configured in LaTeX Workshop.
 
 ## 1. Acquire the template
@@ -41,9 +46,9 @@ It's always recommended to read the included `README.md`. This file lists the ar
 |-------------|---------|
 | `mitthesis.cls`	| Core LaTeX class implementing MIT formatting |
 | `MIT-thesis-template/MIT-Thesis.tex` | Main LaTeX file for your thesis |
-| `abstract.tex`, `acknowledgments.tex`, `biosketch.tex` | Files where you insert your abstract, acknowledgments and optional biosketch |
+| `abstract.tex`, `acknowledgments.tex`, `biography.tex` | Files where you insert your abstract, acknowledgments and optional biographical sketch |
 | `chapter1.tex`, `chapter...` | Sample chapters to use as templates |
-| `\Reader{...}` commands / `committee_members.tex` | In v1.21 and newer, `\Reader{...}` commands automatically generate the thesis committee page; older packages may include a separate `committee_members.tex` sample |
+| `\Reader{...}` commands / `committee_members.tex` | In v1.21 and newer, `\Reader{...}` commands automatically generate the thesis committee page; if you omit all readers, you can still insert your own optional `committee_members.tex` page before the abstract |
 | `appendixa.tex`, `appendixb.tex` | Sample appendices showing code listing and long tables |
 | `mitthesis-sample.bib` | Sample bibliography file with many entries |
 | `mitthesis-style.css` | Optional CSS embedded when tagged PDF is in use |
@@ -59,15 +64,15 @@ After extraction, keep the directory structure intact; LaTeX will look for chapt
 
 ### Class file location update
 
-Update on May 4, 2026: the current [CTAN package listing](https://ctan.org/tex-archive/macros/latex/contrib/mitthesis) shows `mitthesis.cls` in the outer `mitthesis` folder, while `MIT-thesis-template` is the folder with the files you edit. The [official documentation](https://mirrors.ctan.org/macros/latex/contrib/mitthesis/mitthesis-doc/mitthesis-doc.pdf) says to copy `MIT-thesis-template` onto your system; if the current `mitthesis.cls` is already installed in TeX Live, you are all set, and if not, copy `mitthesis.cls` into your working directory.
+Update July 2026: the current [`mitthesis` package listing](https://ctan.org/pkg/mitthesis) shows `mitthesis` v1.23 dated June 5, 2026. The archive still puts `mitthesis.cls` in the outer `mitthesis` folder, while `MIT-thesis-template` is the folder with the files you edit. The [official documentation](https://mirrors.ctan.org/macros/latex/contrib/mitthesis/mitthesis-doc/mitthesis-doc.pdf) says to copy `MIT-thesis-template` onto your system; if the current `mitthesis.cls` is already installed in TeX Live, you are all set, and if not, copy `mitthesis.cls` into your working directory.
 
 In practice, with VS Code + LaTeX Workshop, the least surprising setup is:
 
 1. Open `MIT-thesis-template` as the VS Code workspace.
-2. If the first build fails, copy `../mitthesis.cls` into `MIT-thesis-template`.
+2. Copy `../mitthesis.cls` into `MIT-thesis-template` if your local TeX Live has an older installed class, or if you need a small local LGO adjustment described below.
 3. Rebuild.
 
-This matters because TeX Live may already have an older `mitthesis.cls` installed. For example, a TeX Live 2025 installation can still have mitthesis v1.20, while the current CTAN zip is v1.22. Mixing v1.22 template files with a v1.20 installed class can trigger errors such as `Undefined control sequence \CiteNolink`. Copying the outer class file into `MIT-thesis-template` makes the project use the matching class version.
+This matters because TeX Live may already resolve `\documentclass{mitthesis}` to an older installed `mitthesis.cls`. For example, a TeX Live 2025 installation can still have mitthesis v1.20 while the current CTAN zip is v1.23. Mixing template files and class files from different versions can trigger confusing errors; `Undefined control sequence \CiteNolink` is one example. Copying the outer class file into `MIT-thesis-template` makes the project use the class version that came with the files you just downloaded.
 {: .notice}
 
 ## 2. Opening the project in VS Code
@@ -111,7 +116,10 @@ If you are a student in MIT's [Leaders for Global Operations (LGO)](https://lgo.
 
 ## 5. LGO Thesis tweaks
 
-The official package includes an example relevant for an LGO thesis: [`One_author_two_degrees.tex`](https://mirrors.ctan.org/macros/latex/contrib/mitthesis/examples/cover_page_samples/latex_sources/One_author_two_degrees.tex). I've adapted this example to simplify things.
+The official package includes a useful dual-degree example: [`One_author_two_degrees.tex`](https://mirrors.ctan.org/macros/latex/contrib/mitthesis/examples/cover_page_samples/latex_sources/One_author_two_degrees.tex). The LGO-specific version below follows the current v1.23 interface, with one LGO cover-page addition.
+
+Before the mechanics: **thank you to [Prof. John H. Lienhard](https://lienhard.mit.edu/people/#lienhard)** for maintaining `mitthesis` and for the generous May 2026 email exchange behind this update. He responded my questions promptly, pointed me to the cleaner `\\ &` pattern for multi-department lines, and even prototyped `\LGO` after I asked about native support for the LGO cover-page phrase. He also noted that he needed to check the detail with MIT Libraries before treating it as package-approved, and the current class file still marks the LGO accommodation as tentative. My practical read: LGO theses from prior years have used this line and have been accepted by MIT Libraries, so `\LGO` is useful, but use it at your own risk and have the compiled cover page reviewed by LGO staff and your department reviewer before final submission.
+{: .notice}
 
 1. In your `MIT-Thesis.tex`, locate:
     ```tex
@@ -125,10 +133,7 @@ The official package includes an example relevant for an LGO thesis: [`One_autho
     % \Author{Author full name}{Author department}[Author's first PREVIOUS degree][Author's second PREVIOUS degree][...
     % Note that third, fourth, fifth, and sixth arguments are optional [] and may be omitted
 
-    \Author{LGO Student Name}
-    {\shortstack[l]{MIT Sloan School of Management and\\
-    Department of Electrical Engineering \& Computer Science}}
-    [B.S. Previous Degree, Previous College, 2018]
+    \Author{LGO Student Name}{MIT Sloan School of Management and \\ & Department of Electrical Engineering and Computer Science}[B.S. Previous Degree, Previous College, 2018]
 
     % Use once for each degree fulfilled by thesis
     % For two degrees from one department, leave the department argument blank for the second degree {}.
@@ -136,8 +141,9 @@ The official package includes an example relevant for an LGO thesis: [`One_autho
     \Degree{Master of Science in Electrical Engineering and Computer Science}{Department of Electrical Engineering and Computer Science}
 
     % If there is more than one supervisor, use the \Supervisor command for each.
-    \Supervisor{Sloan Advisor Name}{Professor of Operation Management}
-    \Supervisor{Engineering Advisor Name}{Professor of Electrical Engineering and Computer Science}
+    % The optional [department] field is used on the automatically generated thesis committee page.
+    \Supervisor{Sloan Advisor Name}{Professor of Operations Management}[MIT Sloan School of Management]
+    \Supervisor{Engineering Advisor Name}{Professor of Electrical Engineering and Computer Science}[Department of Electrical Engineering and Computer Science]
 
     % Professor who formally accepts theses for your department (e.g., the Graduate Officer, Professor Sméagol,...)
     % If you need to reduce vertical space, put the acceptor title in the second argument and leave the third blank {}.
@@ -147,6 +153,7 @@ The official package includes an example relevant for an LGO thesis: [`One_autho
     % Keep the signature block at normal size unless the title page itself needs more vertical space.
     \SignatureBlockSize{\normalsize}
     \AuthorNameSize{\normalsize}
+    \Tighten
 
     % Usage: \DegreeDate{Month}{year}
     \DegreeDate{May}{2026}
@@ -155,45 +162,37 @@ The official package includes an example relevant for an LGO thesis: [`One_autho
     \ThesisDate{May 8, 2026}
     ```
 
-The important part for long department names is the `\shortstack[l]{...\\...}` wrapper around the second argument to `\Author`. It forces the affiliation to appear on two left-aligned lines, avoiding awkward automatic wrapping while keeping the title-page signature block at normal size.
+The important part for long department names is the `\\ &` line break inside the second argument to `\Author`. The current documentation uses this pattern for multiple departments and titles. An earlier version of this blog (probably referred to by my Class of 2026 classmates) recommended `\shortstack[l]{...\\...}`; that worked visually, but the `\\ &` style now matches the template's own examples better.
 
 Per "Thesis Review and Submission Process", _LGO Handbook_ (accessed on August 3, 2025), we also need to include:
 
 > "IN CONJUNCTION WITH THE LEADERS FOR GLOBAL OPERATIONS PROGRAM AT THE MASSACHUSETTS INSTITUTE OF TECHNOLOGY".
 
-To achieve this, we have to have our own version of the `mitthesis.cls` (remember it from the "outer" directory?)
+With v1.23, do not manually insert that line into the middle of the title-page code unless you are stuck on an older `mitthesis.cls` file. The current `mitthesis.cls` has an LGO hook near the title-page block. The clean path is:
 
-1. Copy the `mitthesis.cls` file to your project workspace (i.e. same folder as your `MIT-Thesis.tex`)
-2. In your **copied** `mitthesis.cls` file, find the line that goes `at~the\par`. In earlier versions, it appears right after `\__degree_block:`. In v1.21 and newer, it appears right after `\__mitthesis_degree_block:`.
-3. Insert the following line between the degree-block line and `at~the\par`:
+1. Make sure the current `mitthesis.cls` is the class file your project is using. If in doubt, copy the outer `../mitthesis.cls` into `MIT-thesis-template`.
+2. In your `MIT-Thesis.tex`, add this command immediately before `\maketitle`:
+    ```tex
+    \LGO
+    \maketitle
     ```
-    in~conjunction~with~the~Leaders~for~Global~Operations~program\par
+3. If compilation says `Undefined control sequence \LGO`, open your copied `mitthesis.cls`, search for `LGO`, and check whether this line is commented out:
+    ```tex
+    % \NewDocumentCommand\LGO{}{ \bool_gset_true:N \g__mitthesis_LGO_bool }
     ```
-    Remember to maintain the same leading indentation as the two reference lines.
-4. On newer versions, we end up with something like:
+    If your v1.23 copy has that exact commented line, uncomment it:
+    ```tex
+    \NewDocumentCommand\LGO{}{ \bool_gset_true:N \g__mitthesis_LGO_bool }
     ```
-    \__mitthesis_degree_block:
-    in~conjunction~with~the~Leaders~for~Global~Operations~program\par
-    at~the\par
-    ```
-    On older versions, the first line may instead be `\__degree_block:`. Leading indentation omitted to save some spaces here.
 
-By doing so, our LaTeX project build should pick up our copied and edited `mitthesis.cls` file instead of the default `mitthesis.cls` provided by the template package.
-
-**This is a hot fix.** When the official template package is updated and we thought we've pulled the latest updates from CTAN, those new changes won't show up in our thesis workspace unless we merge the new version of `mitthesis.cls` into our local copy of `mitthesis.cls` while keeping the "in conjunction..." line inserted. My take: this **risk is minimal** since your thesis work is short-term and static after submission.
+Breadcrumb for my Class of 2026 classmates: the old version of this post told you to copy `mitthesis.cls` and insert the LGO line manually between the degree block and `at~the\par`. That workaround was useful before I noticed the v1.23 LGO hook, thanks for Prof. Lienhard's updates, but it is no longer the first thing I would do. If you already submitted with that older hot fix, there is nothing to revisit; this update is for people starting or rebuilding from the current package.
 {: .notice}
 
 Rebuild your LaTeX project and you should see a cover page like this:
 
 ![An example of LGO thesis cover page rendered](/images/2025-08-04-Tutorial-MIT-Thesis-LaTeX/LGO-Thesis-Cover-Example.jpg)
-**Note** that the degree date should be **May** at least for the year 2026. Please confirm with your department staff (whoever reviews cover page) each year.
-{: .notice}
 
-### Update: long department names
-
-Update on May 3, 2026: previously I used `\SignatureBlockSize{\footnotesize}` to tame the long Sloan + EECS affiliation line. A cleaner fix is to wrap the department argument itself with `\shortstack[l]{...\\...}`, which inserts the break exactly between the two departments.
-
-If you find other required tweaks, please let me know!
+**Note** that this tutorial uses **May 2026** for the LGO Class of 2026 cover page. MIT supports February, May, June, and September as degree months in the template, so future students should confirm the exact degree date with their department or LGO staff before submitting.
 {: .notice}
 
 ---
