@@ -46,3 +46,11 @@ At [SoundHound](https://soundhound.com), I worked on voice AI products, designin
 
 * 🥪 Restaurant voice AI that answers phone or drive-thru orders 🗣️ _"I want a number 2 sandwich foot long on wheat bread with no pickles"_ ([Press Release](https://www.soundhound.com/newsroom/press-releases/soundhound-and-jersey-mikes-introduce-voice-ai-phone-ordering/))
 * 🚙 In-car voice AI assistant shipped to Citroën Versailles C5 X in China 🗣️ _"Roll up the windows and navigate to the nearest gas station"_ ([Press Release](https://www.soundhound.com/newsroom/press-releases/soundhound-delivers-mandarin-solution/))
+
+---
+
+## Writing
+
+I publish reflective essays on [my Substack](https://junruren.substack.com), and technical tutorials and project write-ups here on this site — [all posts](/year-archive/) stay readable on junruren.com either way. Subscribe to get new essays by email:
+
+{% include substack-embed.html %}

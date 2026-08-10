@@ -10,6 +10,9 @@ tags:
 
 On a cold January day in 2023 in Nashville, Tennessee, just before heading to the airport, I took a small detour to stop by Nashville Jazz Workshop. The venue was closed, but I stood outside for a moment, feeling as if a smooth piano melody were drifting through the air, quietly comforting my homesick heart. If this pairing of American jazz and my Chinese homesickness catches your attention, I invite you into a very personal story of mine, one that intertwines the life journey of an international student with a particular American jazz pianist. Happy 2026, from my home in Shenzhen, China.
 
+This post also lives on [my Substack](https://junruren.substack.com/p/jazz-and-homesickness) — comment there, or subscribe to get future posts by email.
+{: .notice}
+
 ---
 
 ## First Tastes of Homesickness

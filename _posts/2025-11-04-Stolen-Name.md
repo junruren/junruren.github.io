@@ -9,6 +9,9 @@ tags:
 
 Names are one of the first things a system asks for, and one of the easiest ways it reveals what culture it was built for. This post looks at how seemingly harmless assumptions in software can quietly erase identity, using Chinese names as the primary case study.
 
+This post also lives on [my Substack](https://junruren.substack.com/p/stolen-name) — comment there, or subscribe to get future posts by email.
+{: .notice}
+
 ![Cover image by ChatGPT](/images/2025-11-04-Stolen-Name/Cover_by_ChatGPT.png)
 
 ---

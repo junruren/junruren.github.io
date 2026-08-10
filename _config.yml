@@ -297,6 +297,16 @@ permalink: /:categories/:title/
 # paginate_path: /page:num/
 timezone: Etc/UTC # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
+# jekyll-feed: include all posts in /feed.xml (default is 10) so external
+# importers (e.g. Substack) can see the full archive
+feed:
+  posts_limit: 50
+
+# Substack publication URL, used by _includes/substack-embed.html and the
+# "also on Substack" notices. Switch to https://blog.junruren.com if/when the
+# custom domain is set up.
+substack_url: https://junruren.substack.com
+
 
 # Plugins
 plugins:

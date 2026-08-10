@@ -11,6 +11,9 @@ tags:
 
 Two months ago, in May 2026, I somehow graduated from MIT four times.[^1] Somewhere in that run of ceremonies, in front of the Great Dome overlooking the Charles River, I listened to [Dr. Lisa Su's inspiring speech](https://news.mit.edu/2026/commencement-address-lisa-su-0528) about being ambitious, solving hard problems, and finding ways to make luck. I also snacked one last time on bananas from the Banana Lounge. The final result was two degrees, an S.M. in EECS and an MBA, through the [Leaders for Global Operations (LGO) program](https://lgo.mit.edu/) with a \$100,000 fellowship.
 
+This post also lives on [my Substack](https://junruren.substack.com/p/mit-reflection) — comment there, or subscribe to get future posts by email.
+{: .notice}
+
 <figure>
   <a href="/images/2026-07-29-MIT-Reflection/Dome.jpeg">
     <img src="/images/2026-07-29-MIT-Reflection/Dome.jpeg"
