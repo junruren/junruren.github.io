@@ -22,6 +22,8 @@ import json
 import pathlib
 import re
 import sys
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -29,7 +31,17 @@ import xml.etree.ElementTree as ET
 FEED_URL = "https://junruren.substack.com/feed"
 SITE_ORIGIN_MARKER = "Originally published at https://junruren.com"
 CONTENT_NS = "{http://purl.org/rss/1.0/modules/content/}encoded"
-USER_AGENT = "Mozilla/5.0 (compatible; junruren.com archive sync)"
+# Substack sits behind Cloudflare, which 403s bot-looking User-Agents from
+# datacenter IPs (like GitHub Actions runners) — send ordinary browser headers.
+REQUEST_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+    ),
+    "Accept": "*/*",
+    "Accept-Language": "en-US,en;q=0.9",
+}
+RETRIES = 3
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 POSTS_DIR = REPO_ROOT / "_posts"
@@ -39,9 +51,19 @@ IMG_EXT_RE = re.compile(r"\.(png|jpe?g|gif|webp|avif)(?=$|[?%])", re.IGNORECASE)
 
 
 def fetch(url: str) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(req, timeout=60) as resp:
-        return resp.read()
+    req = urllib.request.Request(url, headers=REQUEST_HEADERS)
+    for attempt in range(1, RETRIES + 1):
+        try:
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                return resp.read()
+        except urllib.error.HTTPError as err:
+            if attempt == RETRIES or err.code not in (403, 429, 500, 502, 503):
+                raise
+            delay = 10 * attempt
+            print(f"HTTP {err.code} for {url}, retrying in {delay}s "
+                  f"({attempt}/{RETRIES})")
+            time.sleep(delay)
+    raise RuntimeError("unreachable")
 
 
 def slug_from_link(link: str) -> str:
