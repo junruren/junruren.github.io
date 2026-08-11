@@ -8,11 +8,14 @@ downloaded into images/substack/<slug>/ and rewritten to local paths). Posts
 whose content contains "Originally published at https://junruren.com" are
 skipped — those originated on this site and already live in _posts/.
 
-Runs from the repo root (locally or in .github/workflows/substack-sync.yml):
+Run it manually from the repo root after publishing a new Substack essay,
+then commit and push the generated files:
 
     python3 scripts/substack_sync.py [--dry-run]
 
-Stdlib only — no pip installs needed in CI.
+The sync is deliberately manual and runs only from a normal network:
+Substack blocks GitHub Actions egress IPs, and routing the content through
+third-party relay APIs is not wanted. Stdlib only — nothing to install.
 """
 
 import argparse
