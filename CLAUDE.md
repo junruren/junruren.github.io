@@ -76,6 +76,17 @@ Per-post image directories are named after the post file: `images/2026-07-29-MIT
 
 Each entry sets `category:` to a key from `publication_category:` in `_config.yml`. Only `patents` has a heading title configured; other categories render with a blank `<h2>`, so add a title there before using a new category.
 
+## Substack and the dual-platform model
+
+Since August 2026, essays also live on Substack (<https://junruren.substack.com>). junruren.com remains the complete archive of everything, so updates stay accessible to a diverse audience however (and wherever) they read. Substack has no canonical-URL support, no native Markdown tables, and only limited LaTeX — which is why the split below exists.
+
+- **Reports, tutorials, and project write-ups** are written here in `_posts/` (site-first), as always. Copying one to Substack is optional and manual.
+- **Essays** are published on Substack first (that's where the email goes out). `.github/workflows/substack-sync.yml` runs `scripts/substack_sync.py` every 6 hours on `master`; it mirrors any new Substack post into `_posts/` as a generated file — `generated: substack-sync` and `substack_url:` in the front matter, full HTML body, images downloaded to `images/substack/<slug>/` (the mirror is fully self-hosted, with no third-party CDN dependency). It then dispatches `jekyll.yml` explicitly, because pushes made with `GITHUB_TOKEN` don't trigger other workflows. Don't hand-edit a generated mirror beyond front-matter touch-ups (e.g. adding tags); the Substack version is the source of truth for those posts.
+- **The skip marker**: the sync ignores any feed item whose body contains "Originally published at https://junruren.com". That line marks posts that originated here (the five posts migrated in Aug 2026 all carry it on their Substack copies). **Always keep that exact attribution line when hand-copying a site post to Substack**, or the sync will mirror the copy back and create a duplicate.
+- Site-origin posts that also exist on Substack carry a `{: .notice}` line ("This post also lives on my Substack…") placed **after** the first paragraph — never before it, or it becomes the archive excerpt.
+- `substack_url:` in `_config.yml` powers `_includes/substack-embed.html` (the subscribe iframe on the About page); `_data/navigation.yml` has a "Newsletter" external link.
+- Hand-copying a site post into the Substack editor: GitHub Pages serves `Access-Control-Allow-Origin: *`, so from a Substack editor tab you can `fetch()` the rendered junruren.com post, absolutize `src`/`href` against the post URL, and dispatch a synthetic `paste` ClipboardEvent with `text/html` into the ProseMirror editor — Substack then re-hosts images automatically. Set the title via the React-native value setter (typed input during page load gets dropped), publish **without** sending email for back-dated posts, and set the publish date and slug to match the original.
+
 ## Writing style and editorial conventions
 
 Distilled from the ten published posts. Match these when drafting or editing prose; they are descriptive of what Junru actually does, not aspirational rules.
