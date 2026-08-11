@@ -26,7 +26,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Probe relay candidates (temporary)
+        continue-on-error: true
+        run: |
+          probe() {
+            echo "== $1"
+            curl -sS -m 60 "$1" -o /tmp/probe.out -w "HTTP %{http_code}, %{size_download} bytes\n" || true
+            head -c 80 /tmp/probe.out; echo
+          }
+          probe 'https://api.allorigins.win/raw?url=https%3A%2F%2Fjunruren.substack.com%2Ffeed'
+          probe 'https://corsproxy.io/?url=https%3A%2F%2Fjunruren.substack.com%2Ffeed'
+          probe 'https://api.codetabs.com/v1/proxy?quest=https://junruren.substack.com/feed'
+          probe 'https://wsrv.nl/?url=https%3A%2F%2Fsubstackcdn.com%2Fimage%2Ffetch%2F%24s_%217qf7%21%2Cw_1456%2Cc_limit%2Cf_auto%2Cq_auto%3Agood%2Cfl_progressive%3Asteep%2Fhttps%253A%252F%252Fsubstack-post-media.s3.amazonaws.com%252Fpublic%252Fimages%252F6bfd24db-7a99-42fd-aa61-90d482362a62_1280x853.jpeg'
+
       - name: Mirror new Substack posts
+        continue-on-error: true
         run: python3 scripts/substack_sync.py
 
       - name: Commit, push, and deploy if changed
