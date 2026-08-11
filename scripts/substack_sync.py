@@ -18,6 +18,7 @@ Stdlib only — no pip installs needed in CI.
 from __future__ import annotations
 
 import argparse
+import datetime
 import email.utils
 import html
 import json
@@ -42,13 +43,17 @@ REQUEST_HEADERS = {
     "Accept-Language": "en-US,en;q=0.9",
 }
 # Substack (and substackcdn) block requests from GitHub Actions egress IPs at
-# the network level — every client gets an instant 403, verified empirically.
-# When a direct fetch is refused, retry through a public relay that fetches
-# server-side from unblocked IPs: allorigins for the XML feed, wsrv.nl for
-# images (allorigins times out on large binaries; wsrv.nl is a dedicated
-# image proxy). Direct is always tried first, so nothing changes where
-# Substack is reachable.
-FEED_RELAY = "https://api.allorigins.win/raw?url={}"
+# the network level — every client gets an instant 403, verified empirically
+# (urllib, curl, browser UA, API endpoints; generic proxies like allorigins
+# are blocked by Substack too). Working fallbacks, probed from a runner:
+# rss2json (a feed-reader service whose fetchers Substack allows; returns the
+# feed as JSON) and wsrv.nl (a dedicated image proxy) for substackcdn images.
+# Direct routes are always tried first, so nothing changes where Substack is
+# reachable.
+FEED_FALLBACK_URL = (
+    "https://api.rss2json.com/v1/api.json?rss_url="
+    + urllib.parse.quote(FEED_URL, safe="")
+)
 IMAGE_RELAY = "https://wsrv.nl/?url={}"
 RETRIES = 3
 
@@ -161,37 +166,61 @@ def build_post(item: dict, dry_run: bool) -> pathlib.Path:
     return path
 
 
+def parse_feed_xml(data: bytes) -> list[dict]:
+    root = ET.fromstring(data)
+    return [
+        {
+            "title": (element.findtext("title") or "").strip(),
+            "link": (element.findtext("link") or "").strip(),
+            "content": element.findtext(CONTENT_NS) or "",
+            "date": email.utils.parsedate_to_datetime(element.findtext("pubDate")),
+        }
+        for element in root.findall("./channel/item")
+    ]
+
+
+def parse_feed_rss2json(data: bytes) -> list[dict]:
+    payload = json.loads(data)
+    if payload.get("status") != "ok":
+        raise RuntimeError(f"rss2json status: {payload.get('status')!r}")
+    return [
+        {
+            "title": (entry.get("title") or "").strip(),
+            "link": (entry.get("link") or "").strip(),
+            "content": entry.get("content") or entry.get("description") or "",
+            "date": datetime.datetime.strptime(entry["pubDate"], "%Y-%m-%d %H:%M:%S"),
+        }
+        for entry in payload.get("items", [])
+    ]
+
+
+def load_feed_items() -> list[dict]:
+    try:
+        return parse_feed_xml(fetch(FEED_URL))
+    except Exception as err:  # blocked or truncated — use the feed-reader relay
+        print(f"direct feed fetch failed ({err}); falling back to rss2json")
+        return parse_feed_rss2json(fetch(FEED_FALLBACK_URL))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dry-run", action="store_true", help="report only; write nothing")
     args = parser.parse_args()
 
-    root = ET.fromstring(fetch(FEED_URL, FEED_RELAY))
-    items = root.findall("./channel/item")
+    items = load_feed_items()
     print(f"feed: {len(items)} item(s)")
 
     created = 0
-    for element in items:
-        title = (element.findtext("title") or "").strip()
-        link = (element.findtext("link") or "").strip()
-        content = element.findtext(CONTENT_NS) or ""
-        pub_date = email.utils.parsedate_to_datetime(element.findtext("pubDate"))
-        slug = slug_from_link(link)
+    for item in items:
+        item["slug"] = slug_from_link(item["link"])
 
-        if SITE_ORIGIN_MARKER in content:
-            print(f"skip (site-origin): {slug}")
+        if SITE_ORIGIN_MARKER in item["content"]:
+            print(f"skip (site-origin): {item['slug']}")
             continue
-        if already_mirrored(link, slug):
-            print(f"skip (already mirrored): {slug}")
+        if already_mirrored(item["link"], item["slug"]):
+            print(f"skip (already mirrored): {item['slug']}")
             continue
 
-        item = {
-            "title": title,
-            "link": link,
-            "content": content,
-            "date": pub_date,
-            "slug": slug,
-        }
         path = build_post(item, args.dry_run)
         created += 1
         prefix = "would create" if args.dry_run else "created"
