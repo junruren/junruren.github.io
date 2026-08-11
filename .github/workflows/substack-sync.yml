@@ -26,18 +26,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Probe Substack reachability (temporary)
-        continue-on-error: true
-        run: |
-          BROWSER_UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
-          for target in 'https://junruren.substack.com/feed' 'https://junruren.substack.com/api/v1/archive?sort=new&limit=1'; do
-            echo "== $target"
-            echo "curl default UA: $(curl -sS -o /dev/null -w '%{http_code}' "$target" || true)"
-            echo "curl browser UA: $(curl -sS -o /dev/null -w '%{http_code}' -A "$BROWSER_UA" "$target" || true)"
-          done
-
       - name: Mirror new Substack posts
-        continue-on-error: true
         run: python3 scripts/substack_sync.py
 
       - name: Commit, push, and deploy if changed

@@ -15,6 +15,8 @@ Runs from the repo root (locally or in .github/workflows/substack-sync.yml):
 Stdlib only — no pip installs needed in CI.
 """
 
+from __future__ import annotations
+
 import argparse
 import email.utils
 import html
@@ -31,8 +33,6 @@ import xml.etree.ElementTree as ET
 FEED_URL = "https://junruren.substack.com/feed"
 SITE_ORIGIN_MARKER = "Originally published at https://junruren.com"
 CONTENT_NS = "{http://purl.org/rss/1.0/modules/content/}encoded"
-# Substack sits behind Cloudflare, which 403s bot-looking User-Agents from
-# datacenter IPs (like GitHub Actions runners) — send ordinary browser headers.
 REQUEST_HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
@@ -41,6 +41,15 @@ REQUEST_HEADERS = {
     "Accept": "*/*",
     "Accept-Language": "en-US,en;q=0.9",
 }
+# Substack (and substackcdn) block requests from GitHub Actions egress IPs at
+# the network level — every client gets an instant 403, verified empirically.
+# When a direct fetch is refused, retry through a public relay that fetches
+# server-side from unblocked IPs: allorigins for the XML feed, wsrv.nl for
+# images (allorigins times out on large binaries; wsrv.nl is a dedicated
+# image proxy). Direct is always tried first, so nothing changes where
+# Substack is reachable.
+FEED_RELAY = "https://api.allorigins.win/raw?url={}"
+IMAGE_RELAY = "https://wsrv.nl/?url={}"
 RETRIES = 3
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -50,20 +59,31 @@ IMAGES_ROOT = REPO_ROOT / "images" / "substack"
 IMG_EXT_RE = re.compile(r"\.(png|jpe?g|gif|webp|avif)(?=$|[?%])", re.IGNORECASE)
 
 
-def fetch(url: str) -> bytes:
-    req = urllib.request.Request(url, headers=REQUEST_HEADERS)
-    for attempt in range(1, RETRIES + 1):
-        try:
-            with urllib.request.urlopen(req, timeout=60) as resp:
-                return resp.read()
-        except urllib.error.HTTPError as err:
-            if attempt == RETRIES or err.code not in (403, 429, 500, 502, 503):
-                raise
-            delay = 10 * attempt
-            print(f"HTTP {err.code} for {url}, retrying in {delay}s "
-                  f"({attempt}/{RETRIES})")
-            time.sleep(delay)
-    raise RuntimeError("unreachable")
+def fetch(url: str, relay: str | None = None) -> bytes:
+    """GET url, falling back to the relay when the direct route is blocked."""
+    candidates = [url]
+    if relay:
+        candidates.append(relay.format(urllib.parse.quote(url, safe="")))
+    last_error: Exception = RuntimeError("no fetch candidates")
+    for candidate in candidates:
+        req = urllib.request.Request(candidate, headers=REQUEST_HEADERS)
+        for attempt in range(1, RETRIES + 1):
+            try:
+                with urllib.request.urlopen(req, timeout=60) as resp:
+                    return resp.read()
+            except (urllib.error.HTTPError, urllib.error.URLError) as err:
+                last_error = err
+                code = getattr(err, "code", None)
+                if code == 403:
+                    print(f"HTTP 403 for {candidate}, trying next route")
+                    break  # hard block — retrying the same route is pointless
+                if attempt == RETRIES:
+                    break
+                delay = 5 * attempt
+                print(f"{err} for {candidate}, retrying in {delay}s "
+                      f"({attempt}/{RETRIES})")
+                time.sleep(delay)
+    raise last_error
 
 
 def slug_from_link(link: str) -> str:
@@ -98,7 +118,7 @@ def localize_images(content: str, slug: str, dry_run: bool) -> str:
             continue
         target = REPO_ROOT / local_rel.lstrip("/")
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(fetch(url))
+        target.write_bytes(fetch(url, IMAGE_RELAY))
     for url, local_rel in seen.items():
         content = content.replace(f'src="{url}"', f'src="{local_rel}"')
         content = content.replace(f'href="{url}"', f'href="{local_rel}"')
@@ -146,7 +166,7 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true", help="report only; write nothing")
     args = parser.parse_args()
 
-    root = ET.fromstring(fetch(FEED_URL))
+    root = ET.fromstring(fetch(FEED_URL, FEED_RELAY))
     items = root.findall("./channel/item")
     print(f"feed: {len(items)} item(s)")
 
