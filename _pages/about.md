@@ -8,17 +8,21 @@ redirect_from:
   - /about.html
 ---
 
-I recently graduated from MIT with an S.M. in Electrical Engineering and **Computer Science** (EECS) and an MBA. I was part of MIT's Leaders for Global Operations ([LGO](https://lgo.mit.edu/)) Class of 2026.
+I graduated from MIT in May 2026 with an S.M. in Electrical Engineering and **Computer Science** (EECS) and an MBA. I was part of MIT's Leaders for Global Operations ([LGO](https://lgo.mit.edu/)) Class of 2026.
 
 I am interested in building AI systems that work in the real world: systems that can reason across messy environments, expose the right feedback to people, and become reliable products. Lately I have been thinking about simulation realism, world models, sensor simulation, synthetic data, and the product infrastructure needed to test autonomy before it reaches the road.
 
-Before MIT, I spent six years at [SoundHound](https://soundhound.com) building voice AI products in English and Chinese. My next chapter is at Waymo, where I will work as a Product Manager on simulation realism: making autonomous driving simulation more realistic, scalable, and useful for engineering, research, safety, and operations teams.
+Before MIT, I spent six years at [SoundHound](https://soundhound.com) building voice AI products in English and Chinese. I am now a Product Manager at Waymo working on simulation realism: making autonomous driving simulation more realistic, scalable, and useful for engineering, research, safety, and operations teams.
+
+**New essays go out by email first.** Subscribe below, or read [everything I publish](/year-archive/) here on junruren.com.
+
+{% include substack-embed.html medium="homepage" %}
 
 ---
 
 ## Now
 
-I am in a transition season: recently graduated, preparing to join Waymo, and thinking about how simulation, AI systems, and product judgment come together in autonomy.
+I joined Waymo this summer as a product manager working on simulation, and I am deep in learning mode: how simulation, AI systems, and product judgment come together in autonomy.
 
 Lately I have been thinking about how simulated worlds become trustworthy product infrastructure: how to measure realism, where synthetic data helps or misleads, and how better tools let teams test rare, safety-critical scenarios before they happen on public roads.
 
@@ -51,6 +55,4 @@ At [SoundHound](https://soundhound.com), I worked on voice AI products, designin
 
 ## Writing
 
-I publish reflective essays on [my Substack](https://junruren.substack.com), and technical tutorials and project write-ups here on this site — [all posts](/year-archive/) stay readable on junruren.com either way. Subscribe to get new essays by email:
-
-{% include substack-embed.html %}
+I publish reflective essays on [my Substack](https://junruren.substack.com?utm_source=junruren.com&utm_medium=about-writing), and technical tutorials and project write-ups here on this site. [All posts](/year-archive/) stay readable on junruren.com either way — nothing is locked behind a subscription. The newsletter just means you do not have to remember to check back.

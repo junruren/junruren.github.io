@@ -30,6 +30,9 @@ redirect_from:
 
 ## Work experience
 
+### [Waymo](https://waymo.com/)
+* Product Manager, Simulation Realism, _2026 - Present_
+
 ### [Nike](https://about.nike.com/)
 * AI Research Fellow, _2025_
   * Led product development for a **multi-agent negotiation simulator** leveraging **Agentic AI** to unearth efficiency gains in $8B annual materials spending.

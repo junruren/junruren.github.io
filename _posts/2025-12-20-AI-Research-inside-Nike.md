@@ -12,7 +12,7 @@ tags:
 
 I'm feeling bittersweet because yesterday, December 19, 2025, was my last day at Nike. My six-month research internship culminated in three presentations across multiple time zones. While the details of the work will eventually show up in my MIT thesis next year, here I reflect on this unique journey of conducting AI research at a world-renowned brand.
 
-This post also lives on [my Substack](https://junruren.substack.com/p/ai-research-inside-nike) — comment there, or subscribe to get future posts by email.
+This post also lives on [my Substack](https://junruren.substack.com/p/ai-research-inside-nike?utm_source=junruren.com&utm_medium=referral&utm_campaign=ai-research-inside-nike) — comment there, or subscribe to get future posts by email.
 {: .notice}
 
 ![Amazing sunset over Lake Nike](/images/2025-12-20-AI-Research-inside-Nike/Nike-Campus-Last-Day.jpeg)

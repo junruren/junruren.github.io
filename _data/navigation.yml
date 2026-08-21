@@ -12,7 +12,7 @@ main:
     url: /year-archive/
 
   - title: "Newsletter"
-    url: https://junruren.substack.com
+    url: https://junruren.substack.com?utm_source=junruren.com&utm_medium=nav
 
   - title: "Publications"
     url: /publications/
