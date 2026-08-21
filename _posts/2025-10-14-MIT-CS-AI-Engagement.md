@@ -10,7 +10,7 @@ tags:
 
 How do you build real connections **outside** your home academic program or department, especially in a place like MIT? This post shares a simple playbook for doing exactly that, using my own path into the CS/AI community as a case study. The short version: find the right announcement surfaces, **show up** (even when you won't understand everything), and keep the curiosity dial set to "loud."
 
-This post also lives on [my Substack](https://junruren.substack.com/p/mit-cs-ai-engagement) — comment there, or subscribe to get future posts by email.
+This post also lives on [my Substack](https://junruren.substack.com/p/mit-cs-ai-engagement?utm_source=junruren.com&utm_medium=referral&utm_campaign=mit-cs-ai-engagement) — comment there, or subscribe to get future posts by email.
 {: .notice}
 
 ## Case Study Set‑Up: An SM's "Identity Crisis"

@@ -1,97 +1,55 @@
 {
   "basics": {
-    "name": "Your Sidebar Name",
-    "email": "none@example.org",
+    "name": "Junru Ren \u4efb\u4fca\u5112",
+    "email": "junru@computer.org",
     "phone": "",
-    "website": "https://academicpages.github.io",
-    "summary": "Currently employed at Red Brick University. Short biography for the left-hand sidebar",
+    "website": "https://junruren.com",
+    "summary": "Currently employed at Waymo. Product Manager at Waymo | MIT EECS S.M. + MBA, LGO '26",
     "location": {
       "address": "",
       "postalCode": "",
-      "city": "Earth",
+      "city": "SF Bay Area, CA",
       "countryCode": "US",
       "region": ""
     },
     "profiles": [
       {
-        "network": "Google Scholar",
-        "username": "",
-        "url": "https://scholar.google.com/citations?user=PS_CX0AAAAAJ"
-      },
-      {
         "network": "ORCID",
         "username": "",
-        "url": "http://orcid.org/yourorcidurl"
+        "url": "https://orcid.org/0009-0002-8865-8749"
       },
       {
         "network": "GitHub",
-        "username": "academicpages",
-        "url": "https://github.com/academicpages"
+        "username": "junruren",
+        "url": "https://github.com/junruren"
+      },
+      {
+        "network": "LinkedIn",
+        "username": "junruren",
+        "url": "https://www.linkedin.com/in/junruren"
       }
     ]
   },
   "work": [],
-  "education": [
-    {
-      "institution": "GitHub University",
-      "area": "Ph.D in Version Control Theory",
-      "studyType": "",
-      "startDate": "",
-      "endDate": "2018",
-      "gpa": null,
-      "courses": []
-    },
-    {
-      "institution": "GitHub University",
-      "area": "M.S. in Jekyll",
-      "studyType": "",
-      "startDate": "",
-      "endDate": "2014",
-      "gpa": null,
-      "courses": []
-    },
-    {
-      "institution": "GitHub University",
-      "area": "B.S. in GitHub",
-      "studyType": "",
-      "startDate": "",
-      "endDate": "2012",
-      "gpa": null,
-      "courses": []
-    }
-  ],
+  "education": [],
   "skills": [],
   "languages": [],
   "interests": [],
   "references": [],
   "publications": [
     {
-      "name": "Paper Title Number 1",
-      "publisher": "Journal 1",
-      "releaseDate": "2009-10-01",
-      "website": "http://academicpages.github.io/files/paper1.pdf",
-      "summary": "This paper is about the number 1. The number 2 is left for future work."
+      "name": "Ordering from a menu using natural language",
+      "publisher": "United States Patent and Trademark Office (USPTO)",
+      "releaseDate": "2024-10-22",
+      "website": "",
+      "summary": "How to optimally organize information for a voice AI use case? One of my proudest works at SoundHound, now granted as a U.S. patent."
     },
     {
-      "name": "Paper Title Number 2",
-      "publisher": "Journal 1",
-      "releaseDate": "2010-10-01",
-      "website": "http://academicpages.github.io/files/paper2.pdf",
-      "summary": "This paper is about the number 2. The number 3 is left for future work."
-    },
-    {
-      "name": "Paper Title Number 3",
-      "publisher": "Journal 1",
-      "releaseDate": "2015-10-01",
-      "website": "http://academicpages.github.io/files/paper3.pdf",
-      "summary": "This paper is about the number 3. The number 4 is left for future work."
-    },
-    {
-      "name": "Paper Title Number 4",
-      "publisher": "GitHub Journal of Bugs",
-      "releaseDate": "2024-02-17",
-      "website": "http://academicpages.github.io/files/paper3.pdf",
-      "summary": "This paper is about fixing template issue #693."
+      "name": "A Real-Time High-Precision Pedestrian Navigation Method, Device, and Related Components",
+      "publisher": "China National Intellectual Property Administration (CNIPA)",
+      "releaseDate": "2024-12-24",
+      "website": "",
+      "summary": "My first granted patent (yay) that improves indoor pedestrian navigation without additional onsite hardware."
     }
   ],
   "presentations": [
@@ -140,13 +98,5 @@
       "description": ""
     }
   ],
-  "portfolio": [
-    {
-      "name": "Portfolio item number 1",
-      "category": "portfolio",
-      "date": "",
-      "url": "",
-      "description": "Short description of portfolio item number 1<br/><img src='/images/500x300.png'>"
-    }
-  ]
+  "portfolio": []
 }

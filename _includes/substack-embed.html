@@ -1,5 +1,19 @@
+{% comment %}
+  Substack subscribe form. `transparent=1` is required: without it the iframe
+  paints its own white background, which reads as a white slab on the dark theme.
+  Optional param `medium` tags the fallback link for Substack's traffic report,
+  e.g. pass medium="archive" when including this from the year archive.
+{% endcomment %}
 {% if site.substack_url %}
-<div class="substack-embed" style="margin: 1.5em 0;">
-  <iframe src="{{ site.substack_url }}/embed" width="100%" height="150" style="border: 1px solid #eee; background: white;" frameborder="0" scrolling="no" title="Subscribe to Junru Ren's Substack"></iframe>
+{% assign substack_medium = include.medium | default: "embed" %}
+<div class="substack-embed" style="margin: 1.75em 0;">
+  <iframe src="{{ site.substack_url }}/embed?transparent=1"
+          width="100%" height="150"
+          style="border: 1px solid var(--global-border-color, #eee); border-radius: 4px; background: transparent;"
+          frameborder="0" scrolling="no" loading="lazy"
+          title="Subscribe to {{ site.title }}'s newsletter"></iframe>
+  <p style="font-size: 0.8em; margin: 0.5em 0 0;">
+    Form not loading? <a href="{{ site.substack_url }}?utm_source=junruren.com&amp;utm_medium={{ substack_medium }}">Subscribe on Substack</a>.
+  </p>
 </div>
 {% endif %}
