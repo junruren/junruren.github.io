@@ -10,13 +10,23 @@ The day-to-day work in this repo is **writing blog posts**, not developing softw
 
 ## Build / preview
 
+Local preview works on this machine, but the whole toolchain **must run under Rosetta**:
+
 ```bash
-bundle install                                # ruby deps
-bundle exec jekyll serve -l -H localhost      # http://localhost:4000, live reload
-docker compose up                             # alternative: same site at :4000
+arch -x86_64 bundle install                              # first time only, installs into vendor/bundle
+arch -x86_64 bundle exec jekyll serve -l -H localhost    # http://localhost:4000, live reload
+arch -x86_64 bundle exec jekyll build                    # one-off build into _site/
 ```
 
-Neither path works out of the box on this machine right now: the system Ruby is 2.6 with Bundler 1.17 and the gems are not installed (`bundle exec jekyll` fails with `Could not find commonmarker`), and `docker` is not on PATH. Install a modern Ruby (e.g. via `brew install ruby` / rbenv) and re-run `bundle install`, or install Docker Desktop, before promising a local preview.
+This uses the macOS system Ruby (`/usr/bin/ruby` 2.6) with Bundler 1.17, which is what `Gemfile.lock` was resolved against. `docker compose up` is the documented alternative but `docker` is not on PATH here.
+
+Three things make this fragile; do not "fix" them by guessing:
+
+- **Why Rosetta.** System Ruby 2.6 is a universal binary, and `Gem::Platform.local` reports `universal-darwin-25` under *both* architectures. RubyGems therefore treats the **x86_64** precompiled gems as compatible and installs `nokogiri-…-x86_64-darwin` and `ffi-…-x86_64-darwin`. An arm64 process cannot load them and dies with `LoadError: cannot load such file -- nokogiri/nokogiri`. Running under `arch -x86_64` makes the process x86_64 so the gems load. Dropping the prefix is the single most likely way to "break" the build again.
+- **Never `sudo gem install` for this repo.** The old root-owned install at `/Library/Ruby/Gems/2.6.0` has native extensions compiled for `universal-darwin-23` and `-24`; upgrading macOS to Darwin 25 orphaned them, which is the `Could not find commonmarker` failure. The `vendor/bundle` install above sidesteps that with no sudo and no system directories. `rm -rf vendor .bundle` resets it completely. `vendor/` and `.bundle/` are gitignored.
+- **Homebrew Ruby cannot run this Gemfile.** `ruby 4.0.6` is on PATH ahead of the system Ruby, but `github-pages` (231) pins jekyll 3.9.5 plus a tree of old native gems that will not build on Ruby 4. Prefix commands rather than reaching for `brew`.
+
+None of this affects deployment — `actions/jekyll-build-pages` brings its own pinned toolchain — so `Gemfile.lock` is gitignored and local drift is harmless. Ruby 2.6 has been end-of-life since 2022, so the durable fix, when it is worth the time, is `brew install ruby@3.3` + `bundle install` against that, which drops the Rosetta requirement.
 
 `_config.yml` is **not** reloaded by `jekyll serve` — restart the server after editing it.
 
