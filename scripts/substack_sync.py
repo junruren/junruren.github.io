@@ -57,7 +57,9 @@ def already_mirrored(link: str, slug: str) -> bool:
         head = post.read_text(encoding="utf-8", errors="replace")[:2000]
         if needle in head:
             return True
-        if post.stem.endswith(slug):
+        # hand-mirrored posts may use Title-Case filenames (e.g.
+        # 2026-08-20-A-New-Way-Forward vs slug a-new-way-forward)
+        if post.stem.lower().endswith(slug.lower()):
             return True
     return False
 
