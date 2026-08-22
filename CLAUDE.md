@@ -13,10 +13,14 @@ The day-to-day work in this repo is **writing blog posts**, not developing softw
 Local preview works on this machine, but the whole toolchain **must run under Rosetta**:
 
 ```bash
-arch -x86_64 bundle install                              # first time only, installs into vendor/bundle
-arch -x86_64 bundle exec jekyll serve -l -H localhost    # http://localhost:4000, live reload
-arch -x86_64 bundle exec jekyll build                    # one-off build into _site/
+arch -x86_64 /usr/bin/bundle install                              # installs into vendor/bundle
+arch -x86_64 /usr/bin/bundle exec jekyll serve -l -H localhost    # http://localhost:4000, live reload
+arch -x86_64 /usr/bin/bundle exec jekyll build                    # one-off build into _site/
 ```
+
+Spell out `/usr/bin/bundle`. A bare `bundle` resolves to `/opt/homebrew/bin/bundle`, which is
+an arm64-only Ruby 4 script, so `arch -x86_64 bundle` dies with `Bad CPU type in executable`
+before it reaches the Gemfile.
 
 This uses the macOS system Ruby (`/usr/bin/ruby` 2.6) with Bundler 1.17, which is what `Gemfile.lock` was resolved against. `docker compose up` is the documented alternative but `docker` is not on PATH here.
 
@@ -57,6 +61,51 @@ Confirm with `gh repo view --json nameWithOwner` — it must print `junruren/jun
 ```bash
 gh pr create --repo junruren/junruren.github.io --base master
 ```
+
+## Upstream sync policy
+
+**Last synced: 2026-08-21, up to `a4386d8`** (previous sync: 2025-04-09).
+
+Treat academicpages as a **parts catalogue, not a source of truth**. This is a site that was
+seeded from a template, not a fork that tracks it. There is no server, no runtime dependency,
+and no user data here, so upstream carries almost nothing security-relevant — its changes are
+overwhelmingly cosmetic and performance work.
+
+**Cadence: review, don't chase.** Roughly twice a year, *and* always before editing any template
+file, skim what has landed and cherry-pick only what you want:
+
+```bash
+git fetch upstream
+git log --oneline master..upstream/master
+```
+
+Never auto-merge, and never add CI that does.
+
+**What keeps this cheap.** Across 113 upstream commits and 16 months, the conflict surface was
+four files. That held only because local edits to `_sass/`, `_layouts/`, `assets/`, and existing
+`_includes/` are near zero. Preserve that: add new files (like `_includes/substack-embed.html`)
+or override through `_includes/head/custom.html` and `_includes/footer/custom.html` rather than
+editing template code in place.
+
+**Never take these from upstream:**
+
+- `.github/CONTRIBUTING.md`, `.github/PULL_REQUEST_TEMPLATE.md`, and the `bad-pr`, `close-tests`,
+  and `jekyll-build` workflows. They manage contributions to the *template project*; `bad-pr.yml`
+  auto-closes PRs and `jekyll-build.yml` targets branch `main` and would run alongside our deploy.
+  The only workflow this site needs is `.github/workflows/jekyll.yml`.
+- Academicons from jsDelivr. It is deliberately self-hosted from `assets/css/academicons.min.css`
+  (keep upstream's `preload` pattern, just point it at the local file). Same principle removed the
+  `cdnjs.cloudflare.com` polyfill — prefer fewer third-party hosts.
+- Demo content: `_pages/markdown.md`, `_publications/*paper-title-number-*.md`, and the `images/`
+  files only those pages reference. Upstream keeps adding new ones; delete them each time.
+
+**Gotcha:** upstream added `connection_pool` to the `Gemfile`, so a sync means re-running
+`arch -x86_64 /usr/bin/bundle install` before local preview works again. Deployment is unaffected —
+`actions/jekyll-build-pages` brings its own pinned toolchain, which is also why `Gemfile.lock`
+is gitignored.
+
+**After any sync, verify by hand:** homepage, `/cv/`, `/year-archive/`, a MathJax-heavy post, a
+Substack mirror post, the dark-mode toggle, and the footer on a narrow viewport.
 
 ## Git gotcha
 
@@ -161,7 +210,7 @@ Distilled from the ten published posts. Match these when drafting or editing pro
 ## The CV has two rendering paths
 
 - `_pages/cv.md` — hand-written Markdown, served at `/cv/`, linked from the nav. **This is the source of truth.**
-- `_data/cv.json` + `_includes/cv-template.html` + `assets/css/cv-style.css` — a JSON-Resume-style rendering at `/cv-json/`, currently not linked from the nav. Regenerated from the Markdown by `scripts/update_cv_json.sh` (wraps `scripts/cv_markdown_to_json.py`, which also pulls contact/social fields out of `_config.yml`).
+- `_data/cv.json` + `_includes/cv-template.html` + `_sass/layout/_json_cv.scss` — a JSON-Resume-style rendering at `/cv-json/`, currently not linked from the nav. Regenerated from the Markdown by `scripts/update_cv_json.sh` (wraps `scripts/cv_markdown_to_json.py`, which also pulls contact/social fields out of `_config.yml`).
 
 After editing `_pages/cv.md`, run `./scripts/update_cv_json.sh` to keep `/cv-json/` in sync (it prompts to start a Jekyll server at the end — answer `n` to skip). Also refresh `files/cv.pdf` separately if the PDF is meant to match.
 
