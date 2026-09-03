@@ -56,6 +56,11 @@ Push to `master` → `.github/workflows/jekyll.yml` builds with `actions/jekyll-
 
 Work happens on topic branches named `blog/<topic>/N` (e.g. `blog/waymo/1`, `about/update/1`) and lands on `master` via PR.
 
+Those branches accumulate. `./scripts/tidy-local.sh` fast-forwards `master`, prunes remote-tracking
+refs, and deletes local branches whose work has landed — including squash-merged ones, which
+`git branch --merged` misses because they share no SHA with `master`. It prints a plan by default;
+`--apply` performs the deletions. It refuses to run on a dirty tree and never touches `upstream`.
+
 ### Pull requests must target this repo, never the template
 
 `origin` is `junruren/junruren.github.io`. `upstream` is the academicpages template this site was forked from. With both remotes present and nothing pinned, **`gh` resolves the repo to `academicpages/academicpages.github.io`** — so a bare `gh pr create` opens a pull request against the *template project*, not this site. This was verified, not hypothetical.
