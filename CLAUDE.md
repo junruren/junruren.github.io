@@ -57,9 +57,11 @@ Push to `master` → `.github/workflows/jekyll.yml` builds with `actions/jekyll-
 Work happens on topic branches named `blog/<topic>/N` (e.g. `blog/waymo/1`, `about/update/1`) and lands on `master` via PR.
 
 Those branches accumulate. `./scripts/tidy-local.sh` fast-forwards `master`, prunes remote-tracking
-refs, and deletes local branches whose work has landed — including squash-merged ones, which
+refs, and deletes local branches whose work has landed — including rebase- and squash-merged ones, which
 `git branch --merged` misses because they share no SHA with `master`. It prints a plan by default;
-`--apply` performs the deletions. It refuses to run on a dirty tree and never touches `upstream`.
+`--apply` performs the deletions. It detects all three merge styles — merge commit, rebase, and
+squash — since only the first leaves a shared SHA. It refuses to run on a dirty tree and never
+touches `upstream`.
 
 ### Pull requests must target this repo, never the template
 
