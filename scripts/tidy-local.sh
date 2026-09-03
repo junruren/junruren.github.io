@@ -12,9 +12,10 @@
 #     status.showUntrackedFiles=no, so a plain `git status` lies about new posts).
 #   - master is only ever fast-forwarded, never merged or rebased, so it cannot conflict
 #     and cannot lose commits.
-#   - A branch is deleted only if its work is provably on master: either an ancestor of
-#     master, or content-identical to a squash-merged commit. Anything else is reported
-#     and left alone.
+#   - A branch is deleted only if its work is provably on master, covering all three
+#     merge buttons: an ancestor of master (merge commit), every commit patch-applied
+#     under new SHAs (rebase), or the combined patch already applied (squash). Anything
+#     else is reported and left alone.
 #   - `upstream` is never fetched. Template syncs are a deliberate, reviewed act — see
 #     the upstream sync policy in CLAUDE.md.
 #
@@ -33,7 +34,7 @@ APPLY=false
 for arg in "$@"; do
   case "$arg" in
     --apply) APPLY=true ;;
-    -h|--help) sed -n '2,23p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    -h|--help) sed -n '2,24p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
     *) echo "unknown argument: $arg" >&2; exit 2 ;;
   esac
 done
@@ -69,9 +70,14 @@ else
 fi
 
 # --- Classify local branches -------------------------------------------------
-# A branch counts as landed if it is an ancestor of master (plain merge) or if a
-# synthetic commit carrying its tree is already applied on master (squash/rebase merge,
-# which leaves no shared SHA).
+# A branch counts as landed in any of three ways, because the three merge buttons leave
+# three different traces:
+#   1. merge commit  -> the branch is an ancestor of master
+#   2. rebase-merge  -> commits are replayed with new SHAs, so every commit is
+#                       patch-applied on master even though none share a SHA
+#   3. squash-merge  -> the commits are combined into one, so no individual commit
+#                       matches; instead the branch's whole tree, as a single patch,
+#                       is already applied
 landed=()
 unlanded=()
 
@@ -84,6 +90,14 @@ while IFS= read -r branch; do
     continue
   fi
 
+  # Rebase-merge: every commit is patch-applied on master under a different SHA.
+  cherry=$(git cherry "$TARGET" "$branch")
+  if [ -n "$cherry" ] && ! grep -q '^+' <<<"$cherry"; then
+    landed+=("$branch (rebase-merged)")
+    continue
+  fi
+
+  # Squash-merge: no individual commit matches, but the combined patch does.
   base=$(git merge-base "$TARGET" "$branch")
   synthetic=$(git commit-tree "$(git rev-parse "$branch^{tree}")" -p "$base" -m _)
   if [ "$(git cherry "$TARGET" "$synthetic" | head -c1)" = "-" ]; then
