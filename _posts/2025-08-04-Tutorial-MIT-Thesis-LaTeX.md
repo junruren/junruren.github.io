@@ -192,15 +192,6 @@ The [official documentation](http://mirrors.ctan.org/macros/latex/contrib/mitthe
 
 LGO has that approval, which is why the command exists.
 
-**Why the rendered line looks different from the handbook.** The class inserts the phrase in lowercase, immediately after your degree block and before the "at the" line, so the cover page reads:
-
-> ...Master of Science in Electrical Engineering and Computer Science  
-> in conjunction with the Leaders for Global Operations program  
-> at the  
-> MASSACHUSETTS INSTITUTE OF TECHNOLOGY
-
-Put together, that satisfies the all-caps requirement quoted from the _LGO Handbook_ above. The handbook is describing the finished sentence, not the letter casing of one fragment, so nothing is missing. Do not "fix" the capitalization by hand.
-
 Using Overleaf instead of a local install? As of September 2026, Prof. Lienhard notes that Overleaf's template gallery is still on **v1.21** (dated November 2, 2025), which does not have `\LGO` at all, so uncommenting it there fails with `Undefined control sequence`. Until the gallery catches up, upload the current CTAN `mitthesis.cls` into your Overleaf project. Overleaf also carries a third-party [LGO Thesis Template](https://www.overleaf.com/latex/templates/lgo-thesis-template/txmvvktbdxst), described as a slight modification of the MIT one for LGO fellows; it is not Prof. Lienhard's official package and lags the CTAN version, so check which class file it actually contains before trusting it.
 {: .notice}
 
@@ -211,7 +202,7 @@ Rebuild your LaTeX project and you should see a cover page like this:
 
 ![An example of LGO thesis cover page rendered](/images/2025-08-04-Tutorial-MIT-Thesis-LaTeX/LGO-Thesis-Cover-Example.jpg)
 
-**Note** that this tutorial uses **May 2026** for the LGO Class of 2026 cover page. MIT supports February, May, June, and September as degree months in the template, so future students should confirm the exact degree date with their department or LGO staff before submitting.
+**Note** that this tutorial uses **May 2026** for the LGO Class of 2026 cover page. MIT supports February, May, June, and September as degree months in the template. Requirements do get revised, so confirm your degree date and the rest of the title page with your department and the LGO program office before submitting.
 {: .notice}
 
 ---
