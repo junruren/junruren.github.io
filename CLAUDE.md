@@ -13,7 +13,7 @@ The day-to-day work in this repo is **writing blog posts**, not developing softw
 Local preview works on this machine, but the whole toolchain **must run under Rosetta**:
 
 ```bash
-arch -x86_64 /usr/bin/bundle install                              # installs into vendor/bundle
+arch -x86_64 env ARCHFLAGS="-arch x86_64" /usr/bin/bundle install  # installs into vendor/bundle
 arch -x86_64 /usr/bin/bundle exec jekyll serve -l -H localhost    # http://localhost:4000, live reload
 arch -x86_64 /usr/bin/bundle exec jekyll build                    # one-off build into _site/
 ```
@@ -24,9 +24,21 @@ before it reaches the Gemfile.
 
 This uses the macOS system Ruby (`/usr/bin/ruby` 2.6) with Bundler 1.17, which is what `Gemfile.lock` was resolved against. `docker compose up` is the documented alternative but `docker` is not on PATH here.
 
-Three things make this fragile; do not "fix" them by guessing:
+Four things make this fragile; do not "fix" them by guessing:
 
 - **Why Rosetta.** System Ruby 2.6 is a universal binary, and `Gem::Platform.local` reports `universal-darwin-25` under *both* architectures. RubyGems therefore treats the **x86_64** precompiled gems as compatible and installs `nokogiri-…-x86_64-darwin` and `ffi-…-x86_64-darwin`. An arm64 process cannot load them and dies with `LoadError: cannot load such file -- nokogiri/nokogiri`. Running under `arch -x86_64` makes the process x86_64 so the gems load. Dropping the prefix is the single most likely way to "break" the build again.
+- **`arch -x86_64` alone is not enough for gems built from source.** It makes the Ruby *process*
+  x86_64, which is what lets the precompiled gems load — but when a gem compiles its own C
+  extension, `clang` still defaults to the native arm64 target. The result is a vendor tree that
+  is architecturally mixed: `nokogiri` and `ffi` (precompiled) x86_64, while `eventmachine`,
+  `http_parser.rb`, `racc`, and `commonmarker` (source-built) come out arm64. `jekyll build`
+  never loads those four, so builds pass and nothing looks wrong — but `jekyll serve -l` needs
+  `eventmachine` for livereload and dies with `incompatible architecture (have 'arm64', need
+  'x86_64')`. Hence `ARCHFLAGS="-arch x86_64"` on the install line above. To check:
+  `find vendor/bundle -name '*.bundle' | xargs -n1 lipo -archs | sort | uniq -c` should report
+  x86_64 only. To repair, delete the offending gem and extension directories under
+  `vendor/bundle/ruby/2.6.0/` and re-run the install command — bundler will not rebuild a gem
+  it considers already present.
 - **Never `sudo gem install` for this repo.** The old root-owned install at `/Library/Ruby/Gems/2.6.0` has native extensions compiled for `universal-darwin-23` and `-24`; upgrading macOS to Darwin 25 orphaned them, which is the `Could not find commonmarker` failure. The `vendor/bundle` install above sidesteps that with no sudo and no system directories. `rm -rf vendor .bundle` resets it completely. `vendor/` and `.bundle/` are gitignored.
 - **Homebrew Ruby cannot run this Gemfile.** `ruby 4.0.6` is on PATH ahead of the system Ruby, but `github-pages` (231) pins jekyll 3.9.5 plus a tree of old native gems that will not build on Ruby 4. Prefix commands rather than reaching for `brew`.
 
@@ -103,7 +115,7 @@ editing template code in place.
   files only those pages reference. Upstream keeps adding new ones; delete them each time.
 
 **Gotcha:** upstream added `connection_pool` to the `Gemfile`, so a sync means re-running
-`arch -x86_64 /usr/bin/bundle install` before local preview works again. Deployment is unaffected —
+`arch -x86_64 env ARCHFLAGS="-arch x86_64" /usr/bin/bundle install` before local preview works again. Deployment is unaffected —
 `actions/jekyll-build-pages` brings its own pinned toolchain, which is also why `Gemfile.lock`
 is gitignored.
 
