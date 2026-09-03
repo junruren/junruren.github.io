@@ -96,6 +96,9 @@ editing template code in place.
 - Academicons from jsDelivr. It is deliberately self-hosted from `assets/css/academicons.min.css`
   (keep upstream's `preload` pattern, just point it at the local file). Same principle removed the
   `cdnjs.cloudflare.com` polyfill — prefer fewer third-party hosts.
+- The Mastodon share button in `_includes/social-share.html`. It is the only share link that
+  routes readers through a third party (`addtoany.com`); the other four go straight to the
+  destination. Upstream owns this file, so a sync will try to put it back.
 - Demo content: `_pages/markdown.md`, `_publications/*paper-title-number-*.md`, and the `images/`
   files only those pages reference. Upstream keeps adding new ones; delete them each time.
 
