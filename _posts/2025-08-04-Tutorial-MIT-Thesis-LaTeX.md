@@ -18,7 +18,7 @@ MIT's libraries require theses to be deposited electronically using a strict for
 
 Many thanks to Prof. John H. Lienhard for maintaining `mitthesis` and for generously answering questions from students like me.
 
-Update September 2026: this post now targets [`mitthesis` v1.24](https://ctan.org/pkg/mitthesis), dated August 21, 2026. The headline for anyone who read the earlier version: **`\LGO` is now an official, documented command**, so the two temporary workarounds this post used to describe -- editing `mitthesis.cls` by hand, or redefining the hook in your preamble -- are no longer needed. If you remember other screenshots or comments, they came from the v1.20-v1.23 transition period, when class-file location, committee-page behavior, and LGO cover-page workarounds were all still moving.
+Update September 2026: this post now targets [`mitthesis` v1.24](https://ctan.org/pkg/mitthesis), dated August 21, 2026. If you read an earlier version, the one thing worth knowing is that **`\LGO` is now an official, documented command**, so the temporary workarounds this post used to describe are no longer needed. Any other screenshots or comments you remember came from the v1.20-v1.23 period, when class-file location, committee-page behavior, and LGO cover-page workarounds were all still moving.
 {: .notice}
 
 This tutorial blog builds on top of my previous ["Tutorial: Use LaTeX Locally with VS Code"]({% post_url 2025-06-29-Tutorial-LaTeX-VSCode %}). By following that tutorial, you should already have:
@@ -55,9 +55,6 @@ It's always recommended to read the included `README.md`. This file lists the ar
 | `mydesign.tex` | Optional file where you can load packages to customise colours, margins or caption styles |
 | `fontsets/` | Subdirectory containing optional font definitions |
 
-As of v1.24, `MIT-Thesis.pdf` ships in the outer `mitthesis` folder as a sample thesis built with the default fonts. If your download does not show it, not a big deal because we will be able to create it later.
-{: .notice}
-
 Additionally, the `mitthesis-doc` directory contains detailed PDF documentation, and the examples directory provides sample theses showcasing different font options.
 
 After extraction, keep the directory structure intact; LaTeX will look for chapter files relative to the main file. You can rename the outer folder to reflect your project's name.
@@ -74,8 +71,6 @@ In practice, with VS Code + LaTeX Workshop, the least surprising setup is:
 
 This matters because TeX Live may already resolve `\documentclass{mitthesis}` to an older installed `mitthesis.cls`. For example, a TeX Live 2025 installation can still have mitthesis v1.20 while the current CTAN zip is v1.24. Mixing template files and class files from different versions can trigger confusing errors; `Undefined control sequence \CiteNolink` is one example. Copying the outer class file into `MIT-thesis-template` makes the project use the class version that came with the files you just downloaded.
 {: .notice}
-
-Knowing *which* class file you are actually compiling against matters even more now that LGO support depends on it -- see [section 5](#5-lgo-thesis-tweaks). The quickest check is to look at the top of your build log, where LaTeX reports the class it loaded and its date.
 
 ## 2. Opening the project in VS Code
 
@@ -118,9 +113,9 @@ If you are a student in MIT's [Leaders for Global Operations (LGO)](https://lgo.
 
 ## 5. LGO Thesis tweaks
 
-The official package includes a useful dual-degree example: [`One_author_two_degrees.tex`](https://mirrors.ctan.org/macros/latex/contrib/mitthesis/examples/cover_page_samples/latex_sources/One_author_two_degrees.tex). The LGO-specific version below follows the current v1.24 interface, where the LGO cover-page line is finally built in.
+The official package includes a useful dual-degree example: [`One_author_two_degrees.tex`](https://mirrors.ctan.org/macros/latex/contrib/mitthesis/examples/cover_page_samples/latex_sources/One_author_two_degrees.tex). The LGO-specific version below follows the current v1.24 interface, where the LGO cover-page line is built in.
 
-Before the mechanics: **thank you to [Prof. John H. Lienhard](https://lienhard.mit.edu/people/#lienhard)** for maintaining `mitthesis` and for the generous email exchange behind this section. It started in May 2026 with a small bug report from me -- the sample dual-degree file omitted "May" from its list of valid degree months -- and he fixed it the same morning, along with pointing me to the cleaner `\\ &` pattern for multi-department lines. When I asked whether the package might natively support the LGO cover-page phrase, he offered to write a `\LGO` macro, checked it with MIT Libraries, and kept me posted through every step. He also wrote up the whole modernization effort in *TUGboat*: ["Modernizing MIT's thesis template: `mitthesis.cls`"](https://dspace.mit.edu/handle/1721.1/173917), TUGboat 47(2), 2026, pp. 212-221 ([doi:10.47397/tb/47-2/tb146lienhard-mitthesis](https://doi.org/10.47397/tb/47-2/tb146lienhard-mitthesis)). It is a good read even if you never touch a class file.
+Before the mechanics: **thank you to [Prof. John H. Lienhard](https://lienhard.mit.edu/people/#lienhard)** for maintaining `mitthesis` and for the generous email exchange behind this section. It started in May 2026 with a small bug report from me (the sample dual-degree file omitted "May" from its list of valid degree months), which he fixed the same morning, along with pointing me to the cleaner `\\ &` pattern for multi-department lines. When I asked whether the package might natively support the LGO cover-page phrase, he offered to write a `\LGO` macro, checked it with MIT Libraries, and kept me posted through every step. He also wrote up the whole modernization effort in *TUGboat*: ["Modernizing MIT's thesis template: `mitthesis.cls`"](https://dspace.mit.edu/handle/1721.1/173917), TUGboat 47(2), 2026, pp. 212-221 ([doi:10.47397/tb/47-2/tb146lienhard-mitthesis](https://doi.org/10.47397/tb/47-2/tb146lienhard-mitthesis)). It is a good read even if you never touch a class file.
 {: .notice}
 
 1. In your `MIT-Thesis.tex`, locate:
@@ -170,7 +165,7 @@ Per "Thesis Review and Submission Process", _LGO Handbook_ (accessed on August 3
 
 > "IN CONJUNCTION WITH THE LEADERS FOR GLOBAL OPERATIONS PROGRAM AT THE MASSACHUSETTS INSTITUTE OF TECHNOLOGY".
 
-Here is the good news, and the reason this post needed a September 2026 rewrite: **you no longer have to do anything clever.** As of v1.24, `MIT-Thesis.tex` ships the command already, commented out, under a banner near the end of the title-page block:
+Good news: the template already includes the command you need. In `MIT-Thesis.tex`, scroll past the `\Reader{...}` commands and the Creative Commons block to this banner:
 
 ```tex
 %%%%%%  Special additions to title page  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -183,19 +178,19 @@ Here is the good news, and the reason this post needed a September 2026 rewrite:
 % >>> DO NOT use these commands unless your program requires it <<<
 ```
 
-**Uncomment one line.** Scroll down past the `\Reader{...}` commands and the Creative Commons block until you reach that banner, then delete the `%` in front of `\LGO`:
+**Uncomment one line.** Delete the `%` in front of `\LGO`:
 
 ```tex
 \LGO % uncomment this command if you are in the Leaders for Global Operations program
 ```
 
-That is the entire LGO tweak. No class-file surgery, no `\ExplSyntaxOn` block in your preamble.
+That is the entire LGO tweak. (The official documentation says to put `\LGO` "in the preamble"; in the template the line sits after `\begin{document}`, alongside `\title` and `\ThesisDate`. Either works, as long as it comes before `\maketitle`.)
 
-The [official documentation](http://mirrors.ctan.org/macros/latex/contrib/mitthesis/mitthesis-doc/mitthesis-doc.pdf) now covers this in §7.3, "Adding text to title page when required by your program," which names LGO as its worked example. If you are in a different program that requires its own line, `\TitlePageProgramNote{your text}` is the general-purpose version. The documentation attaches a caution worth repeating verbatim:
+The [official documentation](http://mirrors.ctan.org/macros/latex/contrib/mitthesis/mitthesis-doc/mitthesis-doc.pdf) covers this in §7.3, "Adding text to title page when required by your program," which names LGO as its worked example. If you are in a different program that requires its own line, `\TitlePageProgramNote{your text}` is the general-purpose version. The documentation attaches a caution worth repeating verbatim:
 
 > Do not add text unless your program has approval for the addition from the MIT Libraries; otherwise, your thesis may not be accepted.
 
-For LGO specifically, that approval is what the last few months were about, and it is why `\LGO` shipped at all.
+LGO has that approval, which is why the command exists.
 
 **Why the rendered line looks different from the handbook.** The class inserts the phrase in lowercase, immediately after your degree block and before the "at the" line, so the cover page reads:
 
@@ -204,22 +199,19 @@ For LGO specifically, that approval is what the last few months were about, and 
 > at the  
 > MASSACHUSETTS INSTITUTE OF TECHNOLOGY
 
-Put together, that satisfies the all-caps requirement quoted from the _LGO Handbook_ above -- the handbook is describing the finished sentence, not the letter casing of one fragment. Nothing is missing; do not "fix" the capitalization by hand.
+Put together, that satisfies the all-caps requirement quoted from the _LGO Handbook_ above. The handbook is describing the finished sentence, not the letter casing of one fragment, so nothing is missing. Do not "fix" the capitalization by hand.
 
-A note on placement, since the documentation and the template appear to disagree: §7.3 says to put `\LGO` "in the preamble," while the shipped line sits *after* `\begin{document}`, in the same edit region as `\title` and `\ThesisDate`. Both work. `\LGO` only sets a flag, and the only real requirement is that it comes before `\maketitle`.
+Using Overleaf instead of a local install? As of September 2026, Prof. Lienhard notes that Overleaf's template gallery is still on **v1.21** (dated November 2, 2025), which does not have `\LGO` at all, so uncommenting it there fails with `Undefined control sequence`. Until the gallery catches up, upload the current CTAN `mitthesis.cls` into your Overleaf project. Overleaf also carries a third-party [LGO Thesis Template](https://www.overleaf.com/latex/templates/lgo-thesis-template/txmvvktbdxst), described as a slight modification of the MIT one for LGO fellows; it is not Prof. Lienhard's official package and lags the CTAN version, so check which class file it actually contains before trusting it.
 {: .notice}
 
-Using Overleaf instead of a local install? As of September 2026, Prof. Lienhard notes that Overleaf's template gallery still ships **v1.21** (dated November 2, 2025), which predates all of this -- uncommenting `\LGO` there fails with `Undefined control sequence`. Until the gallery catches up, either upload the current CTAN `mitthesis.cls` into your Overleaf project or fall back to the manual approach. Overleaf also carries a third-party [LGO Thesis Template](https://www.overleaf.com/latex/templates/lgo-thesis-template/txmvvktbdxst), described as a slight modification of the MIT one for LGO fellows; it is not Prof. Lienhard's official package and lags the CTAN version, so check what class file it actually contains before trusting it.
-{: .notice}
-
-Breadcrumb for my Class of 2026 classmates: this section has now told you three different things, and only the current one still applies. The **first** version had you copy `mitthesis.cls` and insert the LGO line by hand between the degree block and `at~the\par`. The **second**, from July 2026, offered two ways to switch on a hook that existed in the class file but was not yet activated -- uncommenting it in `mitthesis.cls`, or redefining it in your preamble with `\ExplSyntaxOn`. Both are now obsolete: v1.24 activates `\LGO` officially, and if you are rebuilding on the current package you should delete any leftover preamble block, or defining `\LGO` twice will throw a LaTeX error. If you already submitted using either older approach, there is nothing to revisit -- your cover page was correct.
+Breadcrumb for my Class of 2026 classmates: earlier versions of this post walked through hand-rolled ways to get the LGO line onto the cover page, back when `\LGO` was not yet active. If you already submitted using one of them, there is nothing to revisit; your cover page was correct. If you are rebuilding on v1.24, delete any leftover `\ExplSyntaxOn` block from your preamble, or `\LGO` gets defined twice and LaTeX will error.
 {: .notice}
 
 Rebuild your LaTeX project and you should see a cover page like this:
 
 ![An example of LGO thesis cover page rendered](/images/2025-08-04-Tutorial-MIT-Thesis-LaTeX/LGO-Thesis-Cover-Example.jpg)
 
-**Note** that this tutorial uses **May 2026** for the LGO Class of 2026 cover page. MIT supports February, May, June, and September as degree months in the template, so future students should confirm the exact degree date with their department or LGO staff before submitting. (Fun footnote: the dual-degree sample file used to omit "May" from that list, which is the bug report that started the whole email exchange above. It is fixed now.)
+**Note** that this tutorial uses **May 2026** for the LGO Class of 2026 cover page. MIT supports February, May, June, and September as degree months in the template, so future students should confirm the exact degree date with their department or LGO staff before submitting.
 {: .notice}
 
 ---
