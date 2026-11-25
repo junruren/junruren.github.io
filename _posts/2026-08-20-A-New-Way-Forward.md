@@ -92,7 +92,7 @@ The exception I found was autonomous vehicles. They are robots with four wheels 
 
 Waymo also became one of MIT LGO's industry partner companies in 2023,[^9] around the time I applied to the program. That gave me reasons to pay closer attention: partner introductions, classmates and alumni who worked there, and a lot of homework on my side so that I would not ask questions a search engine could have answered. My curiosity went first to the driver, the AI behind the wheel. But two years of an operations program did their work on me. I grew a real respect for everything that has to be true for a robotaxi to be safe, available, and legal in a city, and I would have happily worked on that side too. By the time full-time recruiting came around in late 2025, Waymo was at the top of my list.
 
-There is a confession about temperament here. At SoundHound, I worked on in-car voice assistants for years before I finally sat in a car in China, in 2024, that ran the Mandarin voice system I had helped build. It took more than five years to close that loop. I am, in a way, an impatient person. I like to see my work reach real people sooner. Waymo's driver was already on the road, and that mattered to me more than I expected.
+There is a confession about temperament here. At SoundHound, I worked on in-car voice assistants for years before I finally sat in a car in China, in 2023, that ran the Mandarin voice system I had helped build. It took about five years to close that loop. I am, in a way, an impatient person. I like to see my work reach real people sooner. Waymo's driver was already on the road, and that mattered to me more than I expected.
 
 ## The Question That Moved
 
